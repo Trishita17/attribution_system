@@ -27,7 +27,7 @@ uvicorn api_server:app --host 0.0.0.0 --port 8000 --reload
 # In a new terminal window
 cd attribution_system
 source venv/bin/activate
-python test_api_client.py
+python test_api_simple.py
 ```
 
 ## 📡 API Endpoints
@@ -42,16 +42,22 @@ The server runs on `http://localhost:8000` with the following endpoints:
 
 ## 🧪 Testing
 
-### Component Tests
+### Database Connection Test
 ```bash
-# Test the core agent functionality
-python test_server.py
+# Test Snowflake connection
+python test_snowflake_connection.py
 ```
 
 ### API Tests
 ```bash
-# Test all API endpoints (requires server to be running)
-python test_api_client.py
+# Test API endpoints (requires server to be running)
+python test_api_simple.py
+```
+
+### Agent Tests
+```bash
+# Run unit tests for agents
+python -m pytest attribution_agents/tests/
 ```
 
 ### Example API Usage
@@ -87,19 +93,48 @@ curl "http://localhost:8000/insights/c123"
 
 ```
 attribution_system/
-├── attribution_agents/          # Core agent modules
-│   ├── agents/                 # Agent implementations
-│   │   ├── search_agents.py   # Search attribution agent
-│   │   └── display_agents.py  # Display attribution agent
-│   ├── config/                # Configuration
-│   ├── data/                  # Data models and clients
-│   ├── llm/                   # LLM integration
-│   └── services/              # Service layer
-├── api_server.py              # FastAPI server
-├── start_server.py            # Server startup script
-├── test_server.py             # Component tests
-├── test_api_client.py         # API integration tests
-└── requirements.txt           # Dependencies
+├── attribution_agents/              # Core agent modules
+│   ├── agents/                     # Agent implementations
+│   │   ├── __init__.py
+│   │   ├── display_agents.py       # Display attribution agent
+│   │   ├── display_helpers.py      # Display agent utilities
+│   │   └── search_agents.py        # Search attribution agent
+│   ├── config/                     # Configuration management
+│   │   ├── __init__.py
+│   │   └── settings.py             # Environment settings
+│   ├── data/                       # Data layer
+│   │   ├── __init__.py
+│   │   ├── model.py                # Data models
+│   │   └── snowflake_client.py     # Database client
+│   ├── llm/                        # LLM integration
+│   │   ├── __init__.py
+│   │   └── client.py               # Anthropic Claude client
+│   ├── services/                   # Service layer
+│   │   ├── __init__.py
+│   │   ├── handlers.py             # Request handlers
+│   │   └── server.py               # Core server logic
+│   ├── tests/                      # Unit tests
+│   │   ├── display_agent_test.py   # Display agent tests
+│   │   └── search_agent_test.py    # Search agent tests
+│   ├── .env.example                # Environment template
+│   ├── agent_manager.py            # Agent coordination
+│   └── requirements.txt            # Agent dependencies
+├── .gitignore                      # Git ignore rules
+├── api_server.py                   # FastAPI server
+├── example_usage.py                # Usage examples
+├── FUTURE_ENHANCEMENTS.md          # Roadmap and planned features
+├── HOW_TO_USE.md                   # Usage instructions
+├── QUICK_START.md                  # Quick setup guide
+├── README.md                       # This file
+├── requirements.txt                # Main dependencies
+├── SECURITY.md                     # Security guidelines
+├── setup.sh                        # Automated setup script
+├── start_server.py                 # Server startup script
+├── SYSTEM_FLOW_EXPLAINED.md        # Technical architecture
+├── test_api_simple.py              # API integration tests
+├── test_snowflake_connection.py    # Database connection test
+├── use_agent.py                    # Agent usage examples
+└── USER_GUIDE.md                   # Comprehensive user guide
 ```
 
 ## ⚙️ Configuration
